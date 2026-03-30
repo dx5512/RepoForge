@@ -1,0 +1,60 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
+*.egg-info/
+dist/
+build/
+*.egg
+.eggs/
+
+# Virtual Environment
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Environment (CONTAINS SECRETS)
+.env
+
+# Worktrees (large, generated)
+.feishu_worktrees/
+.smoke_test_worktrees/
+.test_worktrees/
+.worktrees/
+
+# Git
+.git/
+*.git
+worktrees/
+
+# Logs
+*.log
+logs/
+
+# Docker
+.docker/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Test/Debug
+.pytest_cache/
+.coverage
+htmlcov/
+
+# MCP Tools local state
+.mcp_server/
+
+# Temporary files
+*.tmp
+*.temp
+.tmp/

@@ -1,0 +1,37 @@
+# Auto-SWE-Deer - DeerFlow 2.0 Application Config
+# This file follows DeerFlow's native configuration format
+
+version: "2.0"
+
+# Model Configuration
+model:
+  provider: openai
+  model_id: ${MODEL_ID:-deepseek-chat}
+  api_base: ${OPENAI_BASE_URL:-https://api.deepseek.com}
+  api_key: ${OPENAI_API_KEY}
+
+# MCP Servers Configuration (The Bridge)
+mcp_servers:
+  sandbox_tools:
+    command: "${VENV_PYTHON:-python}"
+    args: ["mcp_tools/main.py"]
+    env:
+      DEERFLOW_MODE: "${DEERFLOW_MODE:-development}"
+
+# Skills Configuration
+skills:
+  search_path:
+    - ./deerflow_app/skills
+    - ./skills
+
+# Context Engineering
+context:
+  max_tokens: 80000
+  auto_compact: true
+  offload_threshold: 100000
+
+# Execution Settings
+execution:
+  max_iterations: 50
+  default_timeout: 120
+  reflection_loops: 3
