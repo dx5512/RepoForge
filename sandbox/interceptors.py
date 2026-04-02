@@ -23,12 +23,15 @@ class CommandInterceptor:
     DANGEROUS_PATTERNS = [
         r"rm\s+-rf\s+/",           # rm -rf /
         r"rm\s+-rf\s+\*",           # rm -rf *
+        r"rm\s+-rf\s+~",           # rm -rf ~
         r"sudo\s+",                 # privilege escalation
         r"shutdown",                 # system shutdown
         r"reboot",                   # system reboot
+        r"poweroff",                 # system poweroff
         r">\s*/dev/null",           # hide output
         r"2>\s*/dev/null",          # hide errors
-        r"\|\s*sh\s*$",             # pipe to shell
+        r"\|\s*sh\b",               # pipe to shell
+        r"\|\s*bash\b",             # pipe to bash
         r"eval\s+",                  # eval execution
         r"exec\s+",                  # exec replacement
     ]
@@ -62,11 +65,11 @@ class CommandInterceptor:
 
         for keyword in self.DANGEROUS_KEYWORDS:
             if keyword in cmd_lower:
+                # Check if keyword appears as a standalone word (not part of another word)
                 parts = cmd_lower.split()
                 if keyword in parts:
-                    idx = parts.index(keyword)
-                    if idx > 0 and not parts[idx-1].startswith("-"):
-                        return False, f"Dangerous keyword: {keyword}"
+                    # Always block these dangerous keywords regardless of position
+                    return False, f"Dangerous keyword: {keyword}"
 
         return True, "OK"
 

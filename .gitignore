@@ -7,11 +7,17 @@ dist/
 build/
 *.egg
 .eggs/
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.tox/
 
 # Virtual Environment
 venv/
 .venv/
 env/
+ENV/
 
 # IDE
 .vscode/
@@ -19,15 +25,19 @@ env/
 *.swp
 *.swo
 *~
+.vim/
 
 # Environment (CONTAINS SECRETS)
 .env
+.env.local
+.env.*.local
 
 # Worktrees (large, generated)
 .feishu_worktrees/
 .smoke_test_worktrees/
 .test_worktrees/
 .worktrees/
+.dynamic_repos/
 
 # Git
 .git/
@@ -40,9 +50,15 @@ logs/
 
 # Docker
 .docker/
+docker-compose.override.yml
 
 # OS
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
 desktop.ini
 
@@ -50,6 +66,7 @@ desktop.ini
 .pytest_cache/
 .coverage
 htmlcov/
+*.cover
 
 # MCP Tools local state
 .mcp_server/
@@ -58,3 +75,26 @@ htmlcov/
 *.tmp
 *.temp
 .tmp/
+.temp/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Node.js (if any frontend)
+node_modules/
+npm-debug.log*
+
+# Package managers
+__pypackages__/
+
+# Ruff
+.ruff_cache/
+
+# uv (Python package manager)
+.uv/
+
+# Claude Code
+.claude/
+
+# Test fixtures (generated)
+dummy_repo/

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Auto-SWE-Deer - Main Entry Point
+RepoForge - Main Entry Point
 
 DeerFlow 2.0 Application for Software Engineering Task Automation.
 
@@ -15,6 +15,10 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 load_dotenv(override=True)
+
+from config import get_config
+
+config = get_config()
 
 WORKDIR = Path(__file__).parent
 
@@ -38,8 +42,7 @@ def check_environment():
     except ImportError:
         errors.append("mcp not installed")
 
-    api_key = os.getenv("OPENAI_API_KEY")
-    if not api_key or api_key == "your_api_key_here":
+    if not config.openai_api_key or config.openai_api_key == "your_api_key_here":
         errors.append("OPENAI_API_KEY not configured in .env")
 
     if errors:
@@ -54,7 +57,7 @@ def check_environment():
 
 def print_banner():
     print("=" * 60)
-    print("Auto-SWE-Deer - DeerFlow 2.0 Application")
+    print("RepoForge - Automated Code Factory")
     print("=" * 60)
     print()
     print("Architecture: Route B (Embrace DeerFlow)")
@@ -82,9 +85,9 @@ def main():
     print("Environment check PASSED")
     print()
     print("Configuration:")
-    print(f"  Model: {os.getenv('MODEL_ID', 'deepseek-chat')}")
-    print(f"  API Base: {os.getenv('OPENAI_BASE_URL', 'https://api.deepseek.com')}")
-    print(f"  DeerFlow Mode: {os.getenv('DEERFLOW_MODE', 'development')}")
+    print(f"  Model: {config.model_id}")
+    print(f"  API Base: {config.openai_base_url}")
+    print(f"  Log Level: {config.log_level}")
     print()
 
     print("Project Structure:")
@@ -99,7 +102,7 @@ def main():
     print("  - mcp_tools/ module: READY")
     print("  - deerflow_app/skills/: CONFIGURED")
     print()
-    print("NOTE: DeerFlow framework integration requires")
+    print("NOTE: RepoForge framework integration requires")
     print("      installing and configuring deer-flow package.")
     print()
     print("To start development:")

@@ -12,8 +12,14 @@ import time
 import shutil
 import os
 import stat
+import threading
 from pathlib import Path
 from typing import Optional
+
+# 🔒 Global lock for all WorktreeManager instances accessing the same index files
+# This ensures thread-safe operations on index.json across concurrent tasks
+_worktree_locks: dict = {}
+_worktree_locks_lock = threading.Lock()  # 保护字典本身的锁
 
 
 def _remove_readonly(func, path, _):
@@ -63,6 +69,14 @@ class WorktreeManager:
         self.worktrees_base = worktrees_base
         self.worktrees_base.mkdir(parents=True, exist_ok=True)
         self.index_path = worktrees_base / "index.json"
+
+        # 🔥 获取该 worktrees_base 对应的锁（确保不同实例但相同 base 的线程安全）
+        lock_key = str(worktrees_base.resolve())
+        with _worktree_locks_lock:
+            if lock_key not in _worktree_locks:
+                _worktree_locks[lock_key] = threading.RLock()  # 使用 RLock 支持重入
+            self._lock = _worktree_locks[lock_key]
+
         if not self.index_path.exists():
             self._save_index({"worktrees": []})
         self.git_available = self._is_git_repo()
@@ -98,15 +112,21 @@ class WorktreeManager:
         return (r.stdout + r.stderr).strip() or "(no output)"
 
     def _load_index(self) -> dict:
-        return json.loads(self.index_path.read_text(encoding="utf-8"))
+        """Load index.json with thread-safety."""
+        with self._lock:
+            if not self.index_path.exists():
+                return {"worktrees": []}
+            return json.loads(self.index_path.read_text(encoding="utf-8"))
 
     def _save_index(self, data: dict):
-        self.index_path.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+        """Save index.json with thread-safety."""
+        with self._lock:
+            self.index_path.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
 
     def _find(self, name: str) -> Optional[dict]:
         idx = self._load_index()
         for wt in idx.get("worktrees", []):
-            if wt.get("name") == name:
+            if wt.get("name") == name and wt.get("status") == "active":
                 return wt
         return None
 

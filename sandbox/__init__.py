@@ -1,5 +1,5 @@
 """
-Sandbox Module - Custom IP for Auto-SWE-Deer
+Sandbox Module - Custom IP for RepoForge
 
 This module provides:
 - SandboxController: Docker container lifecycle management with proper permission handling
